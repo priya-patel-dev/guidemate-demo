@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>GuideMate – Hackathon Edition</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <span class="tag">Hackathon</span>
+        <h1>GuideMate</h1>
+      </div>
+      <span class="meta" id="health">Loading…</span>
+    </header>
+    <p class="sub">AI‑assisted brand‑compliance checking in the browser. No data leaves the device.</p>
+    <nav role="tablist" aria-label="Views">
+      <button role="tab" aria-selected="true" data-tab="creator">1 · Creator</button>
+      <button role="tab" aria-selected="false" data-tab="reviewer">2 · Reviewer</button>
+      <button role="tab" aria-selected="false" data-tab="insights">3 · Insights</button>
+    </nav>
+    <section id="creator">
+      <div class="card">
+        <h2>Paste a draft</h2>
+        <label for="draft">Your text</label>
+        <textarea id="draft" placeholder="Try: Our new dashboard makes reporting effortless."></textarea>
+        <div class="row">
+          <button class="primary" id="checkBtn">Check draft</button>
+          <button class="ghost" id="sampleBad">Load a bad example</button>
+          <button class="ghost" id="sampleGood">Load a good example</button>
+          <button class="ghost hidden" id="newVersion">Revise as new version</button>
+        </div>
+        <p class="meta" id="threadInfo"></p>
+      </div>
+      <div id="results"></div>
+    </section>
+    <section id="reviewer" class="hidden"></section>
+    <section id="insights" class="hidden"></section>
+  </div>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

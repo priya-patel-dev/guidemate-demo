@@ -1,0 +1,615 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>GuideMate</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Newsreader:ital,wght@0,400..600;1,400..600&display=swap">
+<style>
+  :root { --paper:#F3EFE6; --card:#FBF9F4; --ink:#1F2B4D; --muted:#565C78; --line:#CFC8B6; --accent:#B5432A; --ok:#2E6B4F; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper:#141A2E; --card:#1B2340; --ink:#F3EFE6; --muted:#B4BAD2; --line:#34406A; --accent:#E8866C; --ok:#7CC4A0; color-scheme: dark; } }
+  :root[data-theme="dark"] { --paper:#141A2E; --card:#1B2340; --ink:#F3EFE6; --muted:#B4BAD2; --line:#34406A; --accent:#E8866C; --ok:#7CC4A0; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font:17px/1.5 'DM Sans', Arial, sans-serif; }
+  .wrap { max-width:1000px; margin:0 auto; padding-block:24px 80px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); }
+  header { display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:8px; }
+  h1 { font:500 40px/1.1 'Newsreader', Georgia, serif; margin:0; }
+  h2 { font:500 28px/1.2 'Newsreader', Georgia, serif; margin:0 0 8px; }
+  .tag { font:500 13px/1 'DM Sans'; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+  .sub { color:var(--muted); margin:4px 0 20px; }
+  nav { display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+  nav button { background:none; border:1px solid var(--line); color:var(--ink); padding:8px 16px; border-radius:40px; font:500 15px 'DM Sans'; cursor:pointer; }
+  nav button[aria-selected="true"] { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:20px; margin-bottom:16px; }
+  textarea, input, select { width:100%; background:var(--paper); color:var(--ink); border:1px solid var(--line); border-radius:6px; padding:10px 12px; font:16px 'DM Sans'; }
+  textarea { min-height:120px; resize:vertical; }
+  label { display:block; font-weight:600; font-size:14px; margin:12px 0 4px; }
+  .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:12px; }
+  button.primary { background:var(--ink); color:var(--paper); border:0; padding:10px 20px; border-radius:40px; font:600 15px 'DM Sans'; cursor:pointer; }
+  button.ghost { background:none; color:var(--ink); border:1.5px solid var(--ink); padding:8px 16px; border-radius:40px; font:600 14px 'DM Sans'; cursor:pointer; }
+  button:disabled { opacity:.5; cursor:default; }
+  button:focus-visible, a:focus-visible, textarea:focus-visible, input:focus-visible, select:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  .pill { display:inline-block; font:600 12px/1 'DM Sans'; letter-spacing:.06em; text-transform:uppercase; padding:5px 9px; border-radius:20px; border:1px solid var(--line); color:var(--muted); }
+  .pill.rules { color:var(--ink); } .pill.model { color:var(--accent); border-color:var(--accent); }
+  .sent { font:italic 400 20px/1.35 'Newsreader', Georgia, serif; margin:8px 0; }
+  .meta { color:var(--muted); font-size:14px; }
+  .kv { margin:6px 0; } .kv b { display:block; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .good { color:var(--ok); font-weight:600; }
+  .notice { border-left:4px solid var(--accent); padding:8px 12px; background:var(--card); margin:12px 0; font-size:15px; }
+  .stat { font:400 44px/1 'Newsreader', Georgia, serif; color:var(--accent); }
+  .card, .grid > div { min-width:0; } .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; }
+  table { display:block; max-width:100%; overflow-x:auto; width:100%; border-collapse:collapse; font-size:15px; } th,td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); }
+  th { color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:.05em; }
+  .hidden { display:none; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div><span class="tag">Team Enough</span><h1>GuideMate</h1></div>
+    <span class="meta" id="health">connecting…</span>
+  </header>
+  <p class="sub">Check a draft before the reviewer sees it. Every flag says which rule it breaks, how sure we are, and which layer raised it. This demo runs entirely in your browser: nothing is sent anywhere, and saved drafts stay on this device.</p>
+
+  <nav role="tablist" aria-label="Views">
+    <button role="tab" aria-selected="true" data-tab="creator">1 · Creator</button>
+    <button role="tab" aria-selected="false" data-tab="reviewer">2 · Reviewer</button>
+    <button role="tab" aria-selected="false" data-tab="insights">3 · Insights</button>
+  </nav>
+
+  <section id="creator">
+    <div class="card">
+      <h2>Paste a draft</h2>
+      <label for="draft">Your text</label>
+      <textarea id="draft" placeholder="Try: Our super cool new dashboard makes reporting a breeze."></textarea>
+      <div class="row">
+        <button class="primary" id="checkBtn">Check draft</button>
+        <button class="ghost" id="sampleBad">Load a bad example</button>
+        <button class="ghost" id="sampleGood">Load a clean example</button>
+        <button class="ghost hidden" id="newVersion">Revise as new version</button>
+      </div>
+      <p class="meta" id="threadInfo"></p>
+    </div>
+    <div id="results"></div>
+  </section>
+
+  <section id="reviewer" class="hidden">
+    <div class="card">
+      <h2>Drafts waiting for review</h2>
+      <div id="draftList" class="meta">Loading…</div>
+    </div>
+    <div id="reviewPanel"></div>
+  </section>
+
+  <section id="insights" class="hidden">
+    <div class="card">
+      <h2>What reviewers are telling the system</h2>
+      <div id="stats" class="meta">Loading…</div>
+    </div>
+    <div class="card">
+      <h2>Measured accuracy</h2>
+      <p class="meta">Runs the checker on 40 held-out sample drafts, once with the starting data and once with your saved reviewer feedback added. The sample drafts are synthetic.</p>
+      <div class="row"><button class="primary" id="evalBtn">Run measurement</button></div>
+      <div id="evalOut"></div>
+    </div>
+  </section>
+  <p class="meta" style="margin-top:32px">Sample brand and sample data. <button class="ghost" id="resetBtn">Clear saved data</button></p>
+</div>
+
+<script>
+const __defs = {}, __cache = {};
+function __req(n) { const k = n.replace(/^\.\//, ''); if (!__cache[k]) { const m = { exports: {} }; __defs[k](m, m.exports, __req); __cache[k] = m.exports; } return __cache[k]; }
+__defs['text'] = function (module, exports, require) {
+// Small text helpers shared by the rules engine, the model and the checker.
+
+function splitSentences(text) {
+  return String(text)
+    .split(/(?<=[.!?])\s+|\n+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function tokenize(text) {
+  const words = String(text).toLowerCase().match(/[a-z0-9']+/g) || [];
+  const grams = [...words];
+  for (let i = 0; i < words.length - 1; i++) grams.push(words[i] + '_' + words[i + 1]);
+  return grams;
+}
+
+module.exports = { splitSentences, tokenize };
+
+};
+__defs['naive-bayes'] = function (module, exports, require) {
+// A small multinomial Naive Bayes classifier. It is the local stand-in for the tuned model (Layer 2).
+// Classes: 'good', 'bad:tone', 'bad:fact', 'bad:accessibility'. Trains in milliseconds.
+const { tokenize } = require('./text');
+
+class NaiveBayes {
+  constructor() {
+    this.classCount = {};
+    this.tokenCount = {};
+    this.classTokens = {};
+    this.vocab = new Set();
+    this.total = 0;
+    this.goodExamples = [];
+  }
+
+  train(rows) {
+    for (const { text, label } of rows) {
+      const toks = tokenize(text);
+      if (!toks.length) continue;
+      this.total++;
+      this.classCount[label] = (this.classCount[label] || 0) + 1;
+      this.tokenCount[label] = this.tokenCount[label] || {};
+      this.classTokens[label] = this.classTokens[label] || 0;
+      for (const t of toks) {
+        this.vocab.add(t);
+        this.tokenCount[label][t] = (this.tokenCount[label][t] || 0) + 1;
+        this.classTokens[label]++;
+      }
+      if (label === 'good') this.goodExamples.push({ text, set: new Set(toks) });
+    }
+    return this;
+  }
+
+  // Returns { pBad, type, scores } where pBad is the probability the sentence is off-brand.
+  predict(text) {
+    const toks = tokenize(text);
+    const labels = Object.keys(this.classCount);
+    if (!labels.includes('good') || labels.length < 2 || !toks.length) return { pBad: 0, type: 'tone' };
+    const V = this.vocab.size + 1;
+    const logs = {};
+    for (const l of labels) {
+      let lp = Math.log(this.classCount[l] / this.total);
+      for (const t of toks) {
+        lp += Math.log(((this.tokenCount[l][t] || 0) + 1) / (this.classTokens[l] + V));
+      }
+      logs[l] = lp;
+    }
+    const max = Math.max(...Object.values(logs));
+    let sum = 0;
+    const probs = {};
+    for (const l of labels) { probs[l] = Math.exp(logs[l] - max); sum += probs[l]; }
+    let pBad = 0, bestBad = null, bestVal = -1;
+    for (const l of labels) {
+      probs[l] /= sum;
+      if (l !== 'good') {
+        pBad += probs[l];
+        if (probs[l] > bestVal) { bestVal = probs[l]; bestBad = l; }
+      }
+    }
+    return { pBad, type: bestBad ? bestBad.split(':')[1] : 'tone' };
+  }
+
+  // The closest approved sentence, so a flag can point at real precedent.
+  nearestGood(text) {
+    const q = new Set(tokenize(text));
+    let best = null, bestScore = 0;
+    for (const ex of this.goodExamples) {
+      let inter = 0;
+      for (const t of q) if (ex.set.has(t)) inter++;
+      const score = inter / (q.size + ex.set.size - inter || 1);
+      if (score > bestScore) { bestScore = score; best = ex.text; }
+    }
+    return best || (this.goodExamples[0] && this.goodExamples[0].text) || null;
+  }
+}
+
+module.exports = NaiveBayes;
+
+};
+__defs['rules-engine'] = function (module, exports, require) {
+// Layer 1: deterministic rules. Fast, explainable, works with no AI at all.
+const { splitSentences } = require('./text');
+
+const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const hasTerm = (text, term) => new RegExp('(^|[^a-z0-9])' + esc(term.toLowerCase()) + '($|[^a-z0-9])').test(text.toLowerCase());
+
+class RulesEngine {
+  constructor(guidelines) {
+    this.g = guidelines;
+  }
+
+  checkSentence(sentence) {
+    const flags = [];
+    const g = this.g;
+
+    for (const rule of g.glossary || []) {
+      if (hasTerm(sentence, rule.banned_term)) {
+        flags.push({
+          sentence, type: 'terminology', issue: `Avoid “${rule.banned_term}”`,
+          guideline: rule.guideline, suggestion: `Use “${rule.replacement}” instead.`,
+          confidence: 100, source: 'rules', approved_example: rule.examples,
+        });
+      }
+    }
+
+    const claimWord = (g.unsupported_claim_words || []).find((w) => hasTerm(sentence, w));
+    if (claimWord) {
+      const approved = (g.approved_facts || []).some((f) => sentence.toLowerCase().includes(f.claim.toLowerCase()));
+      if (!approved) {
+        flags.push({
+          sentence, type: 'fact', issue: `Unsupported claim: “${claimWord}”`,
+          guideline: 'Claims must match approved materials.',
+          suggestion: 'Use an approved claim, or remove the absolute wording.',
+          confidence: 90, source: 'rules',
+          approved_example: { good: (g.approved_facts || []).map((f) => f.claim).slice(0, 2).join(' / ') },
+        });
+      }
+    }
+
+    const acronyms = new Set((g.accessibility_rules?.allowed_acronyms || []).map((a) => a.toUpperCase()));
+    const shouting = (sentence.match(/\b[A-Z]{4,}\b/g) || []).filter((w) => !acronyms.has(w));
+    if (shouting.length) {
+      flags.push({
+        sentence, type: 'accessibility', issue: `ALL CAPS: ${shouting.join(', ')}`,
+        guideline: 'Use sentence case. ALL CAPS is harder to read and is read aloud letter by letter by some screen readers.',
+        suggestion: 'Rewrite in sentence case.', confidence: 90, source: 'rules', approved_example: null,
+      });
+    }
+    return flags;
+  }
+
+  run(text) {
+    const flags = [];
+    const min = this.g.accessibility_rules?.min_characters ?? 20;
+    if (String(text).trim().length < min) {
+      flags.push({
+        sentence: String(text).trim(), type: 'accessibility', issue: `Draft is shorter than ${min} characters`,
+        guideline: 'Give enough context to be understood on its own.', suggestion: 'Expand the text.',
+        confidence: 100, source: 'rules', approved_example: null,
+      });
+    }
+    for (const s of splitSentences(text)) flags.push(...this.checkSentence(s));
+    return flags;
+  }
+}
+
+module.exports = RulesEngine;
+
+};
+__defs['checker'] = function (module, exports, require) {
+// The core check: rules first, then the model, then the confidence gate.
+const RulesEngine = require('./rules-engine');
+const { splitSentences } = require('./text');
+
+const GATE = 85; // a flag is shown only at or above this confidence (percent)
+const HOLD_FROM = 50; // between this and GATE: kept for the reviewer as a manual check, not shown to the creator
+
+async function checkText(text, { guidelines, provider }) {
+  const rules = new RulesEngine(guidelines);
+  const flags = rules.run(text).map((f) => ({ ...f, model_name: null }));
+
+  const sentences = splitSentences(text);
+  const preds = await provider.classify(sentences);
+  const tone = guidelines.tone_guidelines || {};
+  const toneRule = `Voice should be ${(tone.primary || 'professional')}: ${(tone.secondary || []).join(', ')}. Avoid ${(tone.avoid || []).join(', ')}.`;
+
+  sentences.forEach((sentence, i) => {
+    const p = preds[i];
+    if (!p) return;
+    const confidence = Math.round(p.pBad * 100);
+    if (confidence < HOLD_FROM) return;
+    flags.push({
+      sentence,
+      type: p.type || 'tone',
+      issue: p.type === 'fact' ? 'Claim may be unsupported' : p.type === 'accessibility' ? 'May be hard to read' : 'Reads off-brand in tone',
+      guideline: toneRule,
+      suggestion: p.example ? `Compare with approved wording: “${p.example}”` : 'Rewrite in the brand voice.',
+      confidence,
+      source: 'model',
+      model_name: provider.name,
+      approved_example: p.example ? { good: p.example } : null,
+    });
+  });
+
+  return flags.map((f) => ({ ...f, shown: f.confidence >= GATE ? 1 : 0 }));
+}
+
+module.exports = { checkText, GATE, HOLD_FROM };
+
+};
+window.__GUIDEMATE_DATA = { loadAll: () => ({
+  guidelines: {"_note":"SAMPLE brand guidelines for a fictional fintech brand. Priya: replace with your own.","brand_name":"Northwind (sample brand)","brand_voice":"authoritative, professional, expert","tone_guidelines":{"primary":"authoritative","secondary":["confident","professional","expert"],"avoid":["casual","trendy","hype","buzzwords"]},"glossary":[{"banned_term":"super cool","replacement":"elegant","guideline":"Use a confident, professional tone.","examples":{"bad":"Our super cool dashboard","good":"Our dashboard simplifies reporting."}},{"banned_term":"excited","replacement":"pleased","guideline":"Keep a confident tone; avoid over-enthusiastic wording.","examples":{"bad":"We're excited to announce our new feature.","good":"We're pleased to announce our new feature."}},{"banned_term":"disrupting","replacement":"transforming","guideline":"Avoid hype language.","examples":{"bad":"We're disrupting the market.","good":"We're transforming how teams report."}},{"banned_term":"game-changer","replacement":"significant improvement","guideline":"Avoid hype language.","examples":{"bad":"This is a game-changer.","good":"This is a significant improvement."}},{"banned_term":"awesome","replacement":"strong","guideline":"Use a confident, professional tone.","examples":{"bad":"Our awesome new app","good":"Our new app is built for reliability."}},{"banned_term":"a breeze","replacement":"straightforward","guideline":"Use a confident, professional tone.","examples":{"bad":"Reporting is a breeze.","good":"Reporting is straightforward."}},{"banned_term":"rock star","replacement":"expert","guideline":"Avoid slang.","examples":{"bad":"Our rock star team","good":"Our expert team"}},{"banned_term":"no-brainer","replacement":"clear choice","guideline":"Avoid slang.","examples":{"bad":"It's a no-brainer.","good":"It's a clear choice."}}],"unsupported_claim_words":["unlimited","unmatched","unbeatable","best-in-class","guaranteed","revolutionary","#1","100% secure","risk-free","world-class"],"approved_facts":[{"claim":"Dashboard simplifies reporting","source":"Product documentation v2.1"},{"claim":"One-click deployment","source":"Feature spec doc"},{"claim":"Enterprise-grade security","source":"Security whitepaper 2026"}],"accessibility_rules":{"min_characters":20,"allowed_acronyms":["API","URL","SaaS","KYC","AML","SSO","UI","UX","CEO","FAQ","SDK","PDF"]}},
+  trainingCsv: "text,label,category\n\"Our dashboard simplifies reporting.\",good,tone\n\"We are pleased to announce our new feature.\",good,tone\n\"The platform delivers enterprise-grade security.\",good,tone\n\"Reports are generated in seconds and exported with one click.\",good,tone\n\"Our team brings deep expertise in payments and compliance.\",good,tone\n\"This release improves reliability and reduces processing time.\",good,tone\n\"Customers can reconcile accounts across currencies in one view.\",good,tone\n\"We designed the workflow to reduce manual review.\",good,tone\n\"The platform supports single sign-on for every team.\",good,tone\n\"Our approach combines proven controls with clear audit trails.\",good,tone\n\"Please see the guide for more information.\",good,tone\n\"Each report is available in the activity log.\",good,tone\n\"We provide dedicated support for enterprise customers.\",good,tone\n\"The update gives administrators finer control over permissions.\",good,tone\n\"Our analytics highlight spending patterns across departments.\",good,tone\n\"Setup takes under an hour with guided configuration.\",good,tone\n\"Teams track approvals from a single dashboard.\",good,tone\n\"The service meets the requirements of regulated industries.\",good,tone\n\"We continue to invest in security and performance.\",good,tone\n\"Documentation is available for every integration.\",good,tone\n\"Our platform is built for reliability at scale.\",good,tone\n\"Clear reporting helps finance teams close the books faster.\",good,tone\n\"We support deployment in a single step.\",good,tone\n\"Our experts review every integration before launch.\",good,tone\n\"Access is logged so every action can be audited.\",good,tone\n\"The new release streamlines onboarding for large teams.\",good,tone\n\"We value transparency and publish our uptime history.\",good,tone\n\"Customers receive a named contact for escalations.\",good,tone\n\"Payments are settled and reported the next business day.\",good,tone\n\"The interface keeps the most common actions within reach.\",good,tone\n\"Our new dashboard makes reporting a breeze.\",bad,tone\n\"Our super cool new dashboard is awesome.\",bad,tone\n\"We are so excited to share this with you!\",bad,tone\n\"This is a total game-changer for your team.\",bad,tone\n\"We are disrupting the whole industry, no cap.\",bad,tone\n\"Our rock star engineers crushed it again.\",bad,tone\n\"Honestly it's a no-brainer, you'll love it.\",bad,tone\n\"Get ready for something absolutely epic!\",bad,tone\n\"Our killer new feature blows the competition away.\",bad,tone\n\"Wow, reporting has never been this fun and easy peasy.\",bad,tone\n\"Hey guys, check out our slick new app!\",bad,tone\n\"We are stoked to drop the latest update.\",bad,tone\n\"Say goodbye to boring spreadsheets forever!\",bad,tone\n\"This update is lit and you're gonna love it.\",bad,tone\n\"Our awesome team is crushing it every single day.\",bad,tone\n\"It's basically magic, trust us.\",bad,tone\n\"We went all out and built something wicked cool.\",bad,tone\n\"Dashboards are super easy, like, really easy.\",bad,tone\n\"Your finances just got a whole lot sexier.\",bad,tone\n\"We are buzzing about this brand new release!\",bad,tone\n\"Forget everything you know, this changes the game.\",bad,tone\n\"You'll be blown away by how awesome this is.\",bad,tone\n\"Our crazy good tool does it all, seriously.\",bad,tone\n\"Hustle harder with our supercharged dashboard.\",bad,tone\n\"Reporting is cool again, folks.\",bad,tone\n\"We are thrilled to bits, it's gonna be huge!\",bad,tone\n\"Our platform is the bee's knees for finance teams.\",bad,tone\n\"Nothing beats us, we're simply the coolest.\",bad,tone\n\"Unlimited, unmatched performance.\",bad,fact\n\"We are the best in the world, guaranteed.\",bad,fact\n\"Our product is 100% secure and risk-free.\",bad,fact\n\"Customers save millions with zero effort.\",bad,fact\n\"The only platform that never fails.\",bad,fact\n\"We are number one in every market.\",bad,fact\n\"Revolutionary technology that nobody else has.\",bad,fact\n\"Unbeatable accuracy, always.\",bad,fact\n\"Guaranteed results for every customer.\",bad,fact\n\"Zero downtime, forever, no exceptions.\",bad,fact\n\"Our service is completely unhackable.\",bad,fact\n\"Every customer sees instant ROI.\",bad,fact\n\"RTFM for deets.\",bad,accessibility\n\"CLICK HERE NOW!!!\",bad,accessibility\n\"THIS IS URGENT READ THIS NOW.\",bad,accessibility\n\"pls fix asap thx\",bad,accessibility\n\"idk just try it lol\",bad,accessibility\n\"See attached. Whatever.\",bad,accessibility\n",
+  tests: [{"id":"t01","content":"Our super cool new dashboard makes reporting a breeze.","expect_flag":true},{"id":"t02","content":"Our dashboard simplifies reporting.","expect_flag":false},{"id":"t03","content":"Unlimited, unmatched performance.","expect_flag":true},{"id":"t04","content":"We're excited to announce our new feature.","expect_flag":true},{"id":"t05","content":"We are pleased to announce a new reporting feature.","expect_flag":false},{"id":"t06","content":"We're disrupting the market.","expect_flag":true},{"id":"t07","content":"We are transforming how finance teams reconcile accounts.","expect_flag":false},{"id":"t08","content":"Approvals move through a clear, auditable workflow.","expect_flag":false},{"id":"t09","content":"This is a total no-brainer for any CFO.","expect_flag":true},{"id":"t10","content":"Administrators can set permissions for each team.","expect_flag":false},{"id":"t11","content":"Our rockstar support crew is always ready to rock!","expect_flag":true},{"id":"t12","content":"Support is available around the clock for enterprise plans.","expect_flag":false},{"id":"t13","content":"Guaranteed 100% secure, no risk at all.","expect_flag":true},{"id":"t14","content":"The platform delivers enterprise-grade security.","expect_flag":false},{"id":"t15","content":"PLEASE READ THIS IMMEDIATELY BEFORE ANYTHING ELSE.","expect_flag":true},{"id":"t16","content":"Please review the attached policy before the audit.","expect_flag":false},{"id":"t17","content":"Yo, our slick new app is gonna blow your mind!","expect_flag":true},{"id":"t18","content":"The new app brings invoices and approvals into one view.","expect_flag":false},{"id":"t19","content":"Best-in-class results for every single customer.","expect_flag":true},{"id":"t20","content":"Reconciliation is completed in minutes, not days.","expect_flag":false},{"id":"t21","content":"Wow, this update is awesome and totally epic.","expect_flag":true},{"id":"t22","content":"This update adds audit exports for compliance teams.","expect_flag":false},{"id":"t23","content":"We are crushing it with our wicked fast engine!","expect_flag":true},{"id":"t24","content":"The engine processes batches with consistent latency.","expect_flag":false},{"id":"t25","content":"Revolutionary, world-class, number one.","expect_flag":true},{"id":"t26","content":"Security reviews are completed before each release.","expect_flag":false},{"id":"t27","content":"Reporting is so easy peasy, honestly.","expect_flag":true},{"id":"t28","content":"Reports can be scheduled and delivered by email.","expect_flag":false},{"id":"t29","content":"Say hello to your new favourite game-changer.","expect_flag":true},{"id":"t30","content":"Customers choose configurable controls to match their policies.","expect_flag":false},{"id":"t31","content":"Get stoked, this release is lit.","expect_flag":true},{"id":"t32","content":"This release improves search and filtering across reports.","expect_flag":false},{"id":"t33","content":"Our service never fails and is always free of errors.","expect_flag":true},{"id":"t34","content":"Our service is monitored and its status is public.","expect_flag":false},{"id":"t35","content":"Honestly we nailed it, folks, you're gonna love this.","expect_flag":true},{"id":"t36","content":"Every change is recorded with the author and the time.","expect_flag":false},{"id":"t37","content":"Our team of experts builds software for regulated finance.","expect_flag":false},{"id":"t38","content":"Hustle harder with this supercharged tool, no excuses.","expect_flag":true},{"id":"t39","content":"Training materials are provided for new administrators.","expect_flag":false},{"id":"t40","content":"Single sign-on is supported for all plans.","expect_flag":false}]
+}) };
+</script>
+<script>// Browser version of the backend. Same logic as backend/app.js, but the "server" is this file and the
+// "database" is localStorage. It reuses the real rules engine, Naive Bayes model and checker (bundled in).
+(function () {
+  const NaiveBayes = __req('naive-bayes');
+  const { checkText, GATE } = __req('checker');
+  const { loadAll } = window.__GUIDEMATE_DATA;
+  const DATA = loadAll();
+  const KEY = 'guidemate-store-v1';
+  const REASONS = ['tone', 'facts', 'accessibility', 'brand-fit', 'unclear'];
+  const REASON_TO_CLASS = { tone: 'bad:tone', facts: 'bad:fact', accessibility: 'bad:accessibility', 'brand-fit': 'bad:tone', unclear: 'bad:tone' };
+  const uid = () => (window.crypto && crypto.randomUUID ? crypto.randomUUID() : 'id-' + Math.random().toString(36).slice(2) + Date.now().toString(36));
+  const now = () => new Date().toISOString();
+
+  let mem = null;
+  const empty = () => ({ drafts: [], flags: [], overrides: [], reviews: [], feedback: [] });
+  const db = () => {
+    if (mem) return mem;
+    try { const s = localStorage.getItem(KEY); mem = s ? JSON.parse(s) : empty(); } catch (e) { mem = empty(); }
+    return mem;
+  };
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch (e) { /* private window: keep in memory */ } };
+  const fail = (m) => { throw new Error(m); };
+
+  function parseCsv(text) {
+    const out = [];
+    for (const line of text.split(/\r?\n/).filter(Boolean).slice(1)) {
+      const m = line.match(/^"((?:[^"]|"")*)",(\w+),(\w+)\s*$/);
+      if (!m) continue;
+      out.push({ text: m[1].replace(/""/g, '"'), label: m[2] === 'good' ? 'good' : 'bad:' + m[3] });
+    }
+    return out;
+  }
+  const baseTraining = parseCsv(DATA.trainingCsv);
+  const feedbackToTraining = (rows) => rows.map((f) => ({ text: f.sentence, label: f.label === 'good' ? 'good' : REASON_TO_CLASS[f.reason] || 'bad:tone' }));
+
+  function makeProvider(rows) {
+    const nb = new NaiveBayes().train(rows);
+    return {
+      name: 'local model (Naive Bayes stand-in, not the fine-tuned Gemma)',
+      async classify(sentences) {
+        return sentences.map((s) => { const p = nb.predict(s); return { pBad: p.pBad, type: p.type, example: nb.nearestGood(s) }; });
+      },
+    };
+  }
+  const rulesOnlyProvider = { name: 'none (rules only)', classify: async (s) => s.map(() => ({ pBad: 0, type: 'tone', example: null })) };
+  const currentTraining = () => [...baseTraining, ...feedbackToTraining(db().feedback)];
+
+  async function evalSet(provider, trainingRows, feedbackRows) {
+    let tp = 0, fp = 0, fn = 0, tn = 0;
+    for (const t of DATA.tests) {
+      const flags = await checkText(t.content, { guidelines: DATA.guidelines, provider });
+      const flagged = flags.some((f) => f.shown);
+      if (flagged && t.expect_flag) tp++; else if (flagged) fp++; else if (t.expect_flag) fn++; else tn++;
+    }
+    const r = (a, b) => (b === 0 ? null : a / b);
+    return { model_name: provider.name, training_rows: trainingRows, feedback_rows: feedbackRows, test_drafts: DATA.tests.length, tp, fp, fn, tn,
+      precision: r(tp, tp + fp), recall: r(tp, tp + fn), false_alarm_rate: r(fp, fp + tn) };
+  }
+
+  const draftById = (id) => db().drafts.find((d) => d.id === id);
+
+  const routes = {
+    async health() { return { ok: true, gate: GATE, layer2: makeProvider([]).name, brand: DATA.guidelines.brand_name }; },
+
+    async upload(b) {
+      if (!b.content || !String(b.content).trim()) fail('content is required');
+      const s = db(); const id = uid(); let thread = id, version = 1;
+      if (b.thread_id) { const vs = s.drafts.filter((d) => d.thread_id === b.thread_id); if (vs.length) { thread = b.thread_id; version = Math.max(...vs.map((d) => d.version)) + 1; } }
+      s.drafts.push({ id, thread_id: thread, version, content: String(b.content).trim(), creator_id: b.creator_id || 'creator', status: 'new', created_at: now() });
+      save(); return { draft_id: id, thread_id: thread, version, status: 'new' };
+    },
+
+    async listDrafts() {
+      const s = db();
+      return [...s.drafts].sort((a, b) => (b.created_at + b.version).localeCompare(a.created_at + a.version))
+        .map((d) => ({ ...d, shown_flags: s.flags.filter((f) => f.draft_id === d.id && f.shown === 1).length }));
+    },
+
+    async getDraft(id) {
+      const s = db(); const draft = draftById(id); if (!draft) fail('draft not found');
+      const flags = s.flags.filter((f) => f.draft_id === id).sort((a, b) => b.confidence - a.confidence);
+      const fids = new Set(flags.map((f) => f.id));
+      return { draft, flags, overrides: s.overrides.filter((o) => fids.has(o.flag_id)),
+        versions: s.drafts.filter((d) => d.thread_id === draft.thread_id).sort((a, b) => a.version - b.version),
+        reviews: s.reviews.filter((r) => r.draft_id === id) };
+    },
+
+    async check(b) {
+      const s = db(); const draft = draftById(b.draft_id); if (!draft) fail('draft not found');
+      const kept = new Set(s.overrides.map((o) => o.flag_id));
+      s.flags = s.flags.filter((f) => f.draft_id !== draft.id || kept.has(f.id));
+      const provider = makeProvider(currentTraining());
+      const flags = await checkText(draft.content, { guidelines: DATA.guidelines, provider });
+      for (const f of flags) s.flags.push({ id: uid(), draft_id: draft.id, ...f, created_at: now() });
+      draft.status = 'flagged'; save();
+      const stored = s.flags.filter((f) => f.draft_id === draft.id).sort((a, b) => b.confidence - a.confidence);
+      return { draft_id: draft.id, layer2: provider.name, gate: GATE, shown: stored.filter((f) => f.shown), held_for_reviewer: stored.filter((f) => !f.shown), total_shown: stored.filter((f) => f.shown).length };
+    },
+
+    async override(b) {
+      if (!b.reason || String(b.reason).trim().length < 5) fail('a reason of at least 5 characters is required');
+      const s = db(); const flag = s.flags.find((f) => f.id === b.flag_id); if (!flag) fail('flag not found');
+      const id = uid();
+      s.overrides.push({ id, flag_id: flag.id, reason: String(b.reason).trim(), creator_id: b.creator_id || 'creator', created_at: now() });
+      const left = s.flags.filter((f) => f.draft_id === flag.draft_id && f.shown === 1 && !s.overrides.some((o) => o.flag_id === f.id)).length;
+      if (left === 0) draftById(flag.draft_id).status = 'overridden';
+      save(); return { override_id: id, status: 'logged', flags_left: left };
+    },
+
+    async approve(b) {
+      const s = db(); const draft = draftById(b.draft_id); if (!draft) fail('draft not found');
+      const rid = uid();
+      s.reviews.push({ id: rid, draft_id: draft.id, reviewer_id: b.reviewer_id || 'reviewer', decision: 'approved', reason: null, note: null, created_at: now() });
+      draft.status = 'approved';
+      const ov = s.flags.filter((f) => f.draft_id === draft.id && f.shown === 1 && s.overrides.some((o) => o.flag_id === f.id));
+      for (const f of ov) s.feedback.push({ id: uid(), review_id: rid, draft_id: draft.id, flag_id: f.id, sentence: f.sentence, reason: null, label: 'good', created_at: now() });
+      save(); return { status: 'approved', learned_from_overrides: ov.length };
+    },
+
+    async reject(b) {
+      if (!REASONS.includes(b.reason)) fail('reason must be one of: ' + REASONS.join(', '));
+      const s = db(); const draft = draftById(b.draft_id); if (!draft) fail('draft not found');
+      const rid = uid();
+      s.reviews.push({ id: rid, draft_id: draft.id, reviewer_id: b.reviewer_id || 'reviewer', decision: 'rejected', reason: b.reason, note: b.note || null, created_at: now() });
+      draft.status = 'rejected';
+      const confirmed = s.flags.filter((f) => f.draft_id === draft.id && f.shown === 1 && !s.overrides.some((o) => o.flag_id === f.id));
+      let logged = 0;
+      for (const f of confirmed) { s.feedback.push({ id: uid(), review_id: rid, draft_id: draft.id, flag_id: f.id, sentence: f.sentence, reason: b.reason, label: 'bad', created_at: now() }); logged++; }
+      if (!logged) { s.feedback.push({ id: uid(), review_id: rid, draft_id: draft.id, flag_id: null, sentence: draft.content, reason: b.reason, label: 'bad', created_at: now() }); logged = 1; }
+      save(); return { status: 'rejected', feedback_logged: logged, missed_by_system: confirmed.length === 0 };
+    },
+
+    async stats() {
+      const s = db(); const bad = s.feedback.filter((f) => f.label === 'bad');
+      const counts = {}; bad.forEach((f) => { counts[f.reason] = (counts[f.reason] || 0) + 1; });
+      const by_reason = Object.entries(counts).map(([reason, n]) => ({ reason, n })).sort((a, b) => b.n - a.n);
+      const insights = [];
+      if (bad.length >= 5 && by_reason[0]) {
+        const pct = Math.round((by_reason[0].n / bad.length) * 100);
+        insights.push(`${pct}% of tagged rejections are “${by_reason[0].reason}”. ` + (pct >= 40 ? 'That guideline may be unclear, so consider rewriting it.' : 'No single reason dominates yet.'));
+      }
+      return { total_feedback: s.feedback.length, rejections: s.reviews.filter((r) => r.decision === 'rejected').length,
+        approvals: s.reviews.filter((r) => r.decision === 'approved').length, overrides: s.overrides.length, by_reason, insights };
+    },
+
+    async evaluate() {
+      const fb = feedbackToTraining(db().feedback);
+      const before = await evalSet(makeProvider(baseTraining), baseTraining.length, 0);
+      const after = await evalSet(makeProvider([...baseTraining, ...fb]), baseTraining.length, fb.length);
+      return { note: 'Measured live in your browser on the 40 held-out drafts. These drafts are synthetic samples.', before_feedback: before, after_feedback: after };
+    },
+  };
+
+  window.LocalApi = {
+    async call(path, body) {
+      let m;
+      if (path === '/health') return routes.health();
+      if (path === '/drafts/upload') return routes.upload(body || {});
+      if (path === '/drafts') return routes.listDrafts();
+      if ((m = path.match(/^\/drafts\/(.+)$/))) return routes.getDraft(m[1]);
+      if (path === '/check') return routes.check(body || {});
+      if (path === '/override') return routes.override(body || {});
+      if (path === '/review/approve') return routes.approve(body || {});
+      if (path === '/review/reject') return routes.reject(body || {});
+      if (path === '/feedback/stats') return routes.stats();
+      if (path === '/feedback/evaluate') return routes.evaluate();
+      throw new Error('unknown route ' + path);
+    },
+    hasDrafts() { return db().drafts.length > 0; },
+    reset() { mem = empty(); save(); },
+  };
+})();
+</script>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+const api = (path, body) => window.LocalApi.call(path, body);
+const pct = (x) => x === null || x === undefined ? 'n/a' : Math.round(x * 100) + '%';
+
+let current = null; // { draft_id, thread_id }
+
+// Tabs
+document.querySelectorAll('nav button').forEach((b) => b.addEventListener('click', () => {
+  document.querySelectorAll('nav button').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+  ['creator','reviewer','insights'].forEach((t) => $(t).classList.toggle('hidden', t !== b.dataset.tab));
+  if (b.dataset.tab === 'reviewer') loadDrafts();
+  if (b.dataset.tab === 'insights') loadStats();
+}));
+
+api('/health').then((h) => { $('health').textContent = `Layer 2: ${h.layer2} · gate ${h.gate}%`; }).catch(() => { $('health').textContent = 'server not reachable'; });
+
+$('sampleBad').onclick = () => { $('draft').value = 'Our super cool new dashboard makes reporting a breeze.'; };
+$('sampleGood').onclick = () => { $('draft').value = 'Our dashboard simplifies reporting.'; };
+
+function flagCard(f, opts = {}) {
+  const ex = f.approved_example || {};
+  return `<div class="card" data-flag="${esc(f.id)}">
+    <span class="pill ${esc(f.source)}">${f.source === 'rules' ? 'Rules layer' : 'Model layer'}</span>
+    <span class="pill">${esc(f.type)}</span>
+    <span class="pill">${esc(f.confidence)}% confident</span>
+    <p class="sent">“${esc(f.sentence)}”</p>
+    <div class="kv"><b>Issue</b>${esc(f.issue)}</div>
+    <div class="kv"><b>Guideline</b>${esc(f.guideline)}</div>
+    ${ex.bad ? `<div class="kv"><b>Example to avoid</b>${esc(ex.bad)}</div>` : ''}
+    ${ex.good ? `<div class="kv"><b>Approved example</b><span class="good">${esc(ex.good)}</span></div>` : ''}
+    <div class="kv"><b>Suggestion</b>${esc(f.suggestion)}</div>
+    ${f.model_name ? `<div class="meta">Raised by: ${esc(f.model_name)}</div>` : ''}
+    ${opts.override ? `<div class="row"><input aria-label="Reason for overriding" placeholder="Why do you disagree? (required)" class="ovr" style="flex:1;min-width:200px">
+      <button class="ghost ovrBtn">Override with note</button></div><div class="meta ovrMsg"></div>` : ''}
+    ${opts.overrideNote ? `<div class="notice">Creator override: ${esc(opts.overrideNote)}</div>` : ''}
+  </div>`;
+}
+
+$('checkBtn').onclick = async () => {
+  const content = $('draft').value.trim();
+  if (!content) { $('results').innerHTML = '<div class="notice">Paste some text first.</div>'; return; }
+  $('checkBtn').disabled = true; $('results').innerHTML = '<p class="meta">Checking…</p>';
+  try {
+    const up = await api('/drafts/upload', { content, creator_id: 'priya', thread_id: current && current.revising ? current.thread_id : undefined });
+    const res = await api('/check', { draft_id: up.draft_id });
+    current = { draft_id: up.draft_id, thread_id: up.thread_id, version: up.version };
+    $('threadInfo').textContent = `Saved as version ${up.version}. The reviewer can see every version.`;
+    $('newVersion').classList.remove('hidden');
+    let html = res.total_shown === 0
+      ? '<div class="card"><h2 class="good">No flags</h2><p>This draft passed every check at or above the confidence gate.</p></div>'
+      : `<h2>${res.total_shown} flag${res.total_shown === 1 ? '' : 's'} to look at</h2>`;
+    html += res.shown.map((f) => flagCard(f, { override: true })).join('');
+    if (res.held_for_reviewer.length) html += `<div class="notice">${res.held_for_reviewer.length} lower-confidence item(s) were not shown to you. They are kept for the reviewer as a manual check.</div>`;
+    $('results').innerHTML = html;
+    document.querySelectorAll('#results .card[data-flag]').forEach((card) => {
+      const btn = card.querySelector('.ovrBtn'); if (!btn) return;
+      btn.onclick = async () => {
+        const reason = card.querySelector('.ovr').value;
+        try { await api('/override', { flag_id: card.dataset.flag, reason, creator_id: 'priya' });
+          card.querySelector('.ovrMsg').innerHTML = '<span class="good">Override logged.</span> The reviewer will see your note.'; btn.disabled = true;
+        } catch (e) { card.querySelector('.ovrMsg').textContent = e.message; }
+      };
+    });
+  } catch (e) { $('results').innerHTML = `<div class="notice">${esc(e.message)}</div>`; }
+  $('checkBtn').disabled = false;
+};
+$('newVersion').onclick = () => { if (current) current.revising = true; $('draft').focus(); $('threadInfo').textContent = 'Edit the text and press Check: it will be saved as the next version.'; };
+
+// Reviewer
+async function loadDrafts() {
+  const rows = await api('/drafts');
+  $('draftList').innerHTML = rows.length ? `<table><tr><th>Draft</th><th>Version</th><th>Status</th><th>Flags</th><th></th></tr>${rows.map((d) =>
+    `<tr><td>${esc(d.content.slice(0, 70))}${d.content.length > 70 ? '…' : ''}</td><td>v${d.version}</td><td>${esc(d.status)}</td><td>${d.shown_flags}</td><td><button class="ghost open" data-id="${esc(d.id)}">Open</button></td></tr>`).join('')}</table>` : 'No drafts yet. Add one in the Creator tab.';
+  document.querySelectorAll('.open').forEach((b) => b.onclick = () => openDraft(b.dataset.id));
+}
+
+async function openDraft(id) {
+  const d = await api('/drafts/' + id);
+  const ovr = Object.fromEntries(d.overrides.map((o) => [o.flag_id, o.reason]));
+  const shown = d.flags.filter((f) => f.shown), held = d.flags.filter((f) => !f.shown);
+  $('reviewPanel').innerHTML = `<div class="card">
+      <span class="pill">${esc(d.draft.status)}</span> <span class="pill">version ${d.draft.version} of ${d.versions.length}</span>
+      <p class="sent">“${esc(d.draft.content)}”</p>
+      <div class="meta">Versions: ${d.versions.map((v) => `v${v.version} (${esc(v.status)})`).join(' → ')}</div>
+    </div>
+    ${shown.map((f) => flagCard(f, { overrideNote: ovr[f.id] })).join('') || '<div class="card">No flags were shown to the creator.</div>'}
+    ${held.length ? `<div class="card"><h2>Manual check</h2><p class="meta">Lower confidence, so not shown to the creator.</p>${held.map((f) => `<p>“${esc(f.sentence)}” (${esc(f.confidence)}% · ${esc(f.type)})</p>`).join('')}</div>` : ''}
+    <div class="card"><h2>Decision</h2>
+      <label for="reason">If rejecting, why? (required)</label>
+      <select id="reason"><option value="">Choose a reason…</option><option>tone</option><option>facts</option><option>accessibility</option><option>brand-fit</option><option>unclear</option></select>
+      <label for="note">Note (optional)</label><input id="note">
+      <div class="row"><button class="primary" id="approve">Approve</button><button class="ghost" id="reject">Reject with reason</button></div>
+      <div class="meta" id="decisionMsg"></div></div>`;
+  $('approve').onclick = async () => { try { const r = await api('/review/approve', { draft_id: id, reviewer_id: 'reviewer' });
+    $('decisionMsg').innerHTML = `<span class="good">Approved.</span> ${r.learned_from_overrides ? r.learned_from_overrides + ' creator override(s) saved as learning signals.' : ''}`; loadDrafts(); } catch (e) { $('decisionMsg').textContent = e.message; } };
+  $('reject').onclick = async () => { try { const r = await api('/review/reject', { draft_id: id, reviewer_id: 'reviewer', reason: $('reason').value, note: $('note').value });
+    $('decisionMsg').innerHTML = `<span class="good">Rejected.</span> ${r.feedback_logged} learning signal(s) saved${r.missed_by_system ? ' (the system had missed this draft)' : ''}.`; loadDrafts(); } catch (e) { $('decisionMsg').textContent = e.message; } };
+}
+
+// Insights
+async function loadStats() {
+  const s = await api('/feedback/stats');
+  $('stats').innerHTML = `<div class="grid">
+      <div><div class="stat">${s.total_feedback}</div>learning signals saved</div>
+      <div><div class="stat">${s.rejections}</div>rejections</div>
+      <div><div class="stat">${s.approvals}</div>approvals</div>
+      <div><div class="stat">${s.overrides}</div>creator overrides</div></div>
+    ${s.by_reason.length ? `<table style="margin-top:12px"><tr><th>Rejection reason</th><th>Count</th></tr>${s.by_reason.map((r) => `<tr><td>${esc(r.reason || 'missed issue')}</td><td>${r.n}</td></tr>`).join('')}</table>` : '<p>No tagged rejections yet.</p>'}
+    ${s.insights.map((i) => `<div class="notice">${esc(i)}</div>`).join('')}`;
+}
+$('evalBtn').onclick = async () => {
+  $('evalBtn').disabled = true; $('evalOut').innerHTML = '<p class="meta">Measuring…</p>';
+  try {
+    const r = await api('/feedback/evaluate', {});
+    const row = (name, x) => `<tr><td>${name}</td><td>${x.training_rows}${x.feedback_rows ? ' + ' + x.feedback_rows + ' feedback' : ''}</td><td>${pct(x.precision)}</td><td>${pct(x.recall)}</td><td>${pct(x.false_alarm_rate)}</td></tr>`;
+    $('evalOut').innerHTML = `<table style="margin-top:12px"><tr><th>Setup</th><th>Training rows</th><th>Precision</th><th>Recall</th><th>False alarms</th></tr>
+      ${row('Before feedback', r.before_feedback)}${row('After feedback', r.after_feedback)}</table>
+      <div class="notice">${esc(r.note)} With few feedback rows the change can be zero or small. That is real, not hidden.</div>`;
+  } catch (e) { $('evalOut').innerHTML = `<div class="notice">${esc(e.message)}</div>`; }
+  $('evalBtn').disabled = false;
+};
+
+$('resetBtn').onclick = () => { window.LocalApi.reset(); $('results').innerHTML = ''; $('reviewPanel').innerHTML = ''; $('threadInfo').textContent = 'Saved data cleared.'; current = null; loadDrafts(); loadStats(); };
+if (!window.LocalApi.hasDrafts()) { $('sampleBad').click(); $('checkBtn').click(); }
+</script>
+
+</body></html>
